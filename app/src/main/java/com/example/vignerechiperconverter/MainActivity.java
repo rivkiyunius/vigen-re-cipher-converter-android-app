@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private int[] getIndex() {
-        String temp1 = edPlainText.getText().toString().toUpperCase();
+        String temp1 = edPlainText.getText().toString().toUpperCase().trim();
         char[] pxArray = temp1.toCharArray();
         int z = 0;
         int[] temp = new int[temp1.length()];
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public int[] getIndexKey() {
-        String key = edKey.getText().toString().toUpperCase();
+        String key = edKey.getText().toString().toUpperCase().trim();
         int z = 0;
         char[] keyArray = key.toCharArray();
         int[] temp = new int[key.length()];
@@ -87,13 +87,18 @@ public class MainActivity extends AppCompatActivity {
         int b = getIndexKey().length;
         int z = getIndex().length;
         for (int i = 0; i < getIndex().length; i++) {
-            if (a % b == 0) {
-                a = 0;
-                temp[i] = (getIndex()[i] + getIndexKey()[a]) % 25;
-                a++;
-            } else {
-                temp[i] = (getIndex()[i] + getIndexKey()[a]) % 25;
-                a++;
+            try {
+                if (a % b == 0) {
+                    a = 0;
+                    temp[i] = (getIndex()[i] + getIndexKey()[a]) % 25;
+                    a++;
+                } else {
+                    temp[i] = (getIndex()[i] + getIndexKey()[a]) % 25;
+                    a++;
+                }
+            } catch (Exception e) {
+                tvHasilText.setText("Masukan nilai kedalam plain text dan key (dalam bentuk huruf)");
+                e.printStackTrace();
             }
         }
         return temp;
@@ -102,58 +107,71 @@ public class MainActivity extends AppCompatActivity {
     public void convertToString() {
         int temp = 0;
         char[] tempL = new char[encryptFunction().length];
-        for (int i = 0; i < encryptFunction().length; i++) {
-            if (encryptFunction()[i] < 25) {
-                temp = encryptFunction()[i];
-                tempL[i] = KAMUS.charAt(temp);
-                String a = String.valueOf(tempL);
-                tvHasilText.setText("Hasil text: " + a);
-            } else {
-                temp = encryptFunction()[i];
-                tempL[i] = KAMUS.charAt(temp % 25);
-                String a = String.valueOf(tempL);
-                tvHasilText.setText("Hasil Text: " + a);
+        try {
+            for (int i = 0; i < encryptFunction().length; i++) {
+                if (encryptFunction()[i] < 25) {
+                    temp = encryptFunction()[i];
+                    tempL[i] = KAMUS.charAt(temp);
+                    String a = String.valueOf(tempL);
+                    tvHasilText.setText("Hasil text: " + a);
+                } else {
+                    temp = encryptFunction()[i];
+                    tempL[i] = KAMUS.charAt(temp % 25);
+                    String a = String.valueOf(tempL);
+                    tvHasilText.setText("Hasil Text: " + a);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     public void convertToStringDecrypt() {
         int temp = 0;
         char[] tempL = new char[decryptFunction().length];
-        for (int i = 0; i < decryptFunction().length; i++) {
-            if (decryptFunction()[i] < 25) {
-                temp = decryptFunction()[i];
-                tempL[i] = KAMUS.charAt(temp);
-                String a = String.valueOf(tempL);
-                tvHasilDecryptText.setText("Hasil Text: " + a);
-            } else {
-                temp = decryptFunction()[i];
-                tempL[i] = KAMUS.charAt(temp % 25);
-                String a = String.valueOf(tempL);
-                tvHasilDecryptText.setText("Hasil Text: " + a);
+        try {
+            for (int i = 0; i < decryptFunction().length; i++) {
+                if (decryptFunction()[i] < 25) {
+                    temp = decryptFunction()[i];
+                    tempL[i] = KAMUS.charAt(temp);
+                    String a = String.valueOf(tempL);
+                    tvHasilDecryptText.setText("Hasil Text: " + a);
+                } else {
+                    temp = decryptFunction()[i];
+                    tempL[i] = KAMUS.charAt(temp % 25);
+                    String a = String.valueOf(tempL);
+                    tvHasilDecryptText.setText("Hasil Text: " + a);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
 
     public int[] decryptFunction() {
         int temp[] = new int[encryptFunction().length];
         int a = 0;
-        for (int i = 0; i < encryptFunction().length; i++) {
-            if (a % getIndexKey().length == 0) {
-                a = 0;
-                temp[i] = encryptFunction()[i] - getIndexKey()[a];
-                if (temp[i] < 0) {
-                    temp[i] += 25;
+        try {
+            for (int i = 0; i < encryptFunction().length; i++) {
+                if (a % getIndexKey().length == 0) {
+                    a = 0;
+                    temp[i] = encryptFunction()[i] - getIndexKey()[a];
+                    if (temp[i] < 0) {
+                        temp[i] += 25;
+                    }
+                    a++;
+                } else {
+                    temp[i] = encryptFunction()[i] - getIndexKey()[a];
+                    if (temp[i] < 0) {
+                        temp[i] += 25;
+                    }
+                    a++;
                 }
-                a++;
-            } else {
-                temp[i] = encryptFunction()[i] - getIndexKey()[a];
-                if (temp[i] < 0) {
-                    temp[i] += 25;
-                }
-                a++;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return temp;
     }
