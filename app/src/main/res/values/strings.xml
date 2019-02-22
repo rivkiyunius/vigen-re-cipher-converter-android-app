@@ -3,4 +3,7 @@
     <string name="plain_text">Plain Text</string>
     <string name="key">Key</string>
     <string name="encrypt">Encrypt</string>
+    <string name="index_plain_text">Index plain text:</string>
+    <string name="index_key_text">Index key text:</string>
+    <string name="index_hasil_encrypt">Index hasil encrypt:</string>
 </resources>

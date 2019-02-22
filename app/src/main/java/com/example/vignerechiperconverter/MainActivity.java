@@ -39,21 +39,22 @@ public class MainActivity extends AppCompatActivity {
         btnEncrypt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tvHasilPlain.setText("Index plain text: " + Arrays.toString(getIndex(edPlainText.getText().toString().toUpperCase())));
-                tvHasilKey.setText("Index key text: " + Arrays.toString(getIndexKey(edKey.getText().toString().toUpperCase())));
-                tvHasilEncrypt.setText("Index hasil encrypt: " + Arrays.toString(encryptFunction(getIndex(edPlainText.getText().toString().toUpperCase()), getIndexKey(edKey.getText().toString().toUpperCase()))));
-                convertToString(encryptFunction(getIndex(edPlainText.getText().toString().toUpperCase()), getIndexKey(edKey.getText().toString().toUpperCase())));
-                tvHasilDecrypt.setText("Hasil Decrypt: " + Arrays.toString(decryptFunction(encryptFunction(getIndex(edPlainText.getText().toString().toUpperCase()), getIndexKey(edKey.getText().toString().toUpperCase())), getIndexKey(edKey.getText().toString().toUpperCase()))));
-                convertToStringDecrypt(decryptFunction(encryptFunction(getIndex(edPlainText.getText().toString().toUpperCase()), getIndexKey(edKey.getText().toString().toUpperCase())), getIndexKey(edKey.getText().toString().toUpperCase())));
+                tvHasilPlain.setText(getString(R.string.index_plain_text) + Arrays.toString(getIndex()));
+                tvHasilKey.setText(getString(R.string.index_key_text) + Arrays.toString(getIndexKey()));
+                tvHasilEncrypt.setText(getString(R.string.index_hasil_encrypt) + Arrays.toString(encryptFunction()));
+                convertToString();
+                tvHasilDecrypt.setText("Hasil Decrypt: " + Arrays.toString(decryptFunction()));
+                convertToStringDecrypt();
             }
         });
     }
 
-    private int[] getIndex(String px) {
-        char[] pxArray = px.toCharArray();
+    private int[] getIndex() {
+        String temp1 = edPlainText.getText().toString().toUpperCase();
+        char[] pxArray = temp1.toCharArray();
         int z = 0;
-        int[] temp = new int[px.length()];
-        for (int i = 0; i < px.length(); i++) {
+        int[] temp = new int[temp1.length()];
+        for (int i = 0; i < temp1.length(); i++) {
             int a = 0;
             while (kamusArray[a] != pxArray[i]) {
                 a++;
@@ -64,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
         return temp;
     }
 
-    public int[] getIndexKey(String key) {
+    public int[] getIndexKey() {
+        String key = edKey.getText().toString().toUpperCase();
         int z = 0;
         char[] keyArray = key.toCharArray();
         int[] temp = new int[key.length()];
@@ -79,55 +81,53 @@ public class MainActivity extends AppCompatActivity {
         return temp;
     }
 
-    public int[] encryptFunction(int[] px, int[] key) {
-        int temp[] = new int[px.length];
+    public int[] encryptFunction() {
+        int temp[] = new int[getIndex().length];
         int a = 0;
-        int b = key.length;
-        int z = 0;
-        for (int i = 0; i < px.length; i++) {
-            if (a % key.length == 0) {
+        int b = getIndexKey().length;
+        int z = getIndex().length;
+        for (int i = 0; i < getIndex().length; i++) {
+            if (a % b == 0) {
                 a = 0;
-                temp[i] = (px[i] + key[a]) % 25;
+                temp[i] = (getIndex()[i] + getIndexKey()[a]) % 25;
                 a++;
             } else {
-                temp[i] = (px[i] + key[a]) % 25;
+                temp[i] = (getIndex()[i] + getIndexKey()[a]) % 25;
                 a++;
             }
         }
         return temp;
     }
 
-    public void convertToString(int[] index) {
+    public void convertToString() {
         int temp = 0;
-        char[] tempL = new char[index.length];
-        for (int i = 0; i < index.length; i++) {
-            if (index[i] < 25) {
-                temp = index[i];
+        char[] tempL = new char[encryptFunction().length];
+        for (int i = 0; i < encryptFunction().length; i++) {
+            if (encryptFunction()[i] < 25) {
+                temp = encryptFunction()[i];
                 tempL[i] = KAMUS.charAt(temp);
                 String a = String.valueOf(tempL);
                 tvHasilText.setText("Hasil text: " + a);
-                tvHasilDecryptText.setText("Hasil Text: " + a);
             } else {
-                temp = index[i];
+                temp = encryptFunction()[i];
                 tempL[i] = KAMUS.charAt(temp % 25);
                 String a = String.valueOf(tempL);
                 tvHasilText.setText("Hasil Text: " + a);
-                tvHasilDecryptText.setText("Hasil Text: " + a);
             }
         }
     }
 
-    public void convertToStringDecrypt(int[] index) {
+    public void convertToStringDecrypt() {
         int temp = 0;
-        char[] tempL = new char[index.length];
-        for (int i = 0; i < index.length; i++) {
-            if (index[i] < 25) {
-                temp = index[i];
+        char[] tempL = new char[decryptFunction().length];
+        for (int i = 0; i < decryptFunction().length; i++) {
+            if (decryptFunction()[i] < 25) {
+                temp = decryptFunction()[i];
                 tempL[i] = KAMUS.charAt(temp);
                 String a = String.valueOf(tempL);
                 tvHasilDecryptText.setText("Hasil Text: " + a);
             } else {
-                temp = index[i];
+                temp = decryptFunction()[i];
                 tempL[i] = KAMUS.charAt(temp % 25);
                 String a = String.valueOf(tempL);
                 tvHasilDecryptText.setText("Hasil Text: " + a);
@@ -136,19 +136,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public int[] decryptFunction(int[] index, int[] key) {
-        int temp[] = new int[index.length];
+    public int[] decryptFunction() {
+        int temp[] = new int[encryptFunction().length];
         int a = 0;
-        for (int i = 0; i < index.length; i++) {
-            if (a % key.length == 0) {
+        for (int i = 0; i < encryptFunction().length; i++) {
+            if (a % getIndexKey().length == 0) {
                 a = 0;
-                temp[i] = index[i] - key[a];
+                temp[i] = encryptFunction()[i] - getIndexKey()[a];
                 if (temp[i] < 0) {
                     temp[i] += 25;
                 }
                 a++;
             } else {
-                temp[i] = index[i] - key[a];
+                temp[i] = encryptFunction()[i] - getIndexKey()[a];
                 if (temp[i] < 0) {
                     temp[i] += 25;
                 }
